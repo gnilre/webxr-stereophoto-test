@@ -181,6 +181,7 @@ function loadRepeatingTexture(path) {
     texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.LinearFilter;
     texture.minFilter = THREE.LinearMipMapLinearFilter;
+    texture.anisotropy = 4
     return texture;
 }
 
