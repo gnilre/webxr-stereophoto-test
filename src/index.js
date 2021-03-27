@@ -79,13 +79,13 @@ function addStereoPhotos(scene, roomSize) {
 function addStereoPhoto(scene, width, height, leftImage, rightImage) {
 
     const lGeometry = new THREE.PlaneGeometry(width, height);
-    const lTexture = loadTexture(leftImage);
+    const lTexture = loadPhotoTexture(leftImage);
     const lMaterial = new THREE.MeshStandardMaterial({map: lTexture});
     const lMesh = new THREE.Mesh(lGeometry, lMaterial);
     lMesh.layers.set(1);
 
     const rGeometry = new THREE.PlaneGeometry(width, height);
-    const rTexture = loadTexture(rightImage);
+    const rTexture = loadPhotoTexture(rightImage);
     const rMaterial = new THREE.MeshStandardMaterial({map: rTexture});
     const rMesh = new THREE.Mesh(rGeometry, rMaterial);
     rMesh.layers.set(2);
@@ -151,12 +151,12 @@ function createSpotLight() {
 function loadWallTextures() {
     const textures = [];
 
-    textures[0] = loadTexture('textures/wall1.png', THREE.RepeatWrapping)
-    textures[1] = loadTexture('textures/wall2.png', THREE.RepeatWrapping)
-    textures[2] = loadTexture('textures/wall3.png', THREE.RepeatWrapping)
-    textures[3] = loadTexture('textures/floor.jpg', THREE.RepeatWrapping)
-    textures[4] = loadTexture('textures/wall4.png', THREE.RepeatWrapping)
-    textures[5] = loadTexture('textures/wall5.png', THREE.RepeatWrapping)
+    textures[0] = loadRepeatingTexture('textures/wall1.png')
+    textures[1] = loadRepeatingTexture('textures/wall2.png')
+    textures[2] = loadRepeatingTexture('textures/wall3.png')
+    textures[3] = loadRepeatingTexture('textures/floor.jpg')
+    textures[4] = loadRepeatingTexture('textures/wall4.png')
+    textures[5] = loadRepeatingTexture('textures/wall5.png')
 
     for (let i = 0; i < textures.length; i++) {
         textures[i].repeat.set(8, 8);
@@ -166,12 +166,28 @@ function loadWallTextures() {
     return textures;
 }
 
-function loadTexture(path, wrapping = THREE.ClampToEdgeWrapping) {
+function loadPhotoTexture(path) {
+    const texture = loadTexture(path);
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.magFilter = THREE.LinearFilter;
+    texture.minFilter = THREE.LinearFilter;
+    return texture;
+}
+
+function loadRepeatingTexture(path) {
+    const texture = loadTexture(path);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.magFilter = THREE.LinearFilter;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
+    return texture;
+}
+
+function loadTexture(path) {
     const textureLoader = new THREE.TextureLoader();
     const texture = textureLoader.load(path);
     texture.encoding = THREE.sRGBEncoding;
-    texture.wrapS = wrapping;
-    texture.wrapT = wrapping;
     return texture;
 }
 
