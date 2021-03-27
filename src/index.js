@@ -204,7 +204,7 @@ function createWallMaterials(textures) {
 }
 
 function createCamera() {
-    let fov = 75;
+    let fov = 65;
     let aspect = window.innerWidth / window.innerHeight;
     let near = 0.1;
     let far = 1000;
