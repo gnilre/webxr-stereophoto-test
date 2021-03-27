@@ -21,6 +21,9 @@ function main() {
     addLights(scene, roomSize);
 
     renderer.setAnimationLoop(function () {
+        if (!renderer.xr.isPresenting) {
+            camera.rotation.y -= 0.001;
+        }
         renderer.render(scene, camera);
     });
 
