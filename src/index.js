@@ -114,14 +114,18 @@ function addPhotoFrames(scene, roomSize) {
 
 function addPhotoFrame(scene, width, height) {
 
-    const lGeometry = new THREE.PlaneGeometry(width, height);
+    const lGeometry = new THREE.PlaneGeometry(1, 1);
     const lMaterial = new THREE.MeshBasicMaterial();
     const lMesh = new THREE.Mesh(lGeometry, lMaterial);
+    lMesh.scale.x = width;
+    lMesh.scale.y = height;
     lMesh.layers.set(1);
 
-    const rGeometry = new THREE.PlaneGeometry(width, height);
+    const rGeometry = new THREE.PlaneGeometry(1, 1);
     const rMaterial = new THREE.MeshBasicMaterial();
     const rMesh = new THREE.Mesh(rGeometry, rMaterial);
+    rMesh.scale.x = width;
+    rMesh.scale.y = height;
     rMesh.layers.set(2);
 
     const group = new THREE.Group();
@@ -143,16 +147,25 @@ function loadStereoPhotos(photoFrames, photoStartIndex) {
 }
 
 function loadStereoPhoto(photoFrame, stereoPhoto) {
-    const folder = 'textures/'
-    loadPhotoTexture(folder + stereoPhoto.leftImageFile, texture => {
-        photoFrame.left.material.map = texture;
-        photoFrame.left.material.needsUpdate = true;
-        console.log('Left photo loaded')
-    });
-    loadPhotoTexture(folder + stereoPhoto.rightImageFile, texture => {
-        photoFrame.right.material.map = texture;
-        photoFrame.right.material.needsUpdate = true;
-        console.log('Right photo loaded')
+    loadStereoPhotoImage(photoFrame.group, photoFrame.left, stereoPhoto.leftImageFile);
+    loadStereoPhotoImage(photoFrame.group, photoFrame.right, stereoPhoto.rightImageFile);
+}
+
+function loadStereoPhotoImage(group, imageFrame, imageFile) {
+    loadPhotoTexture('textures/' + imageFile, texture => {
+
+        // Update texture:
+        imageFrame.material.map = texture;
+        imageFrame.material.needsUpdate = true;
+
+        // Update frame size according to the aspect ratio of the photo:
+        const aspectRatio = texture.image.width / texture.image.height;
+        imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
+
+        // Adjust photo frame vertical position:
+        const frameHeight = imageFrame.scale.y;
+        group.position.y = frameHeight / 2;
+
     });
 }
 
