@@ -152,10 +152,17 @@ function loadStereoPhoto(photoFrame, stereoPhoto) {
 }
 
 function loadStereoPhotoImage(group, imageFrame, imageFile) {
+    imageFrame.material.color.setHex(0x080808);
+    if (imageFrame.material.map) {
+        imageFrame.material.map.dispose();
+        imageFrame.material.map = null;
+    }
+    imageFrame.material.needsUpdate = true;
     loadPhotoTexture('textures/' + imageFile, texture => {
 
         // Update texture:
         imageFrame.material.map = texture;
+        imageFrame.material.color.setHex(0xffffff);
         imageFrame.material.needsUpdate = true;
 
         // Update frame size according to the aspect ratio of the photo:
