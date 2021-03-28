@@ -1,10 +1,39 @@
 import * as THREE from './three/three.module.js';
 import {VRButton} from './three/examples/jsm/webxr/VRButton.js';
 
+const stereoPhotos = [
+
+    {leftImageFile: 'stereophoto1_l.JPG', rightImageFile: 'stereophoto1_r.JPG'},
+    {leftImageFile: 'stereophoto2_l.JPG', rightImageFile: 'stereophoto2_r.JPG'},
+    {leftImageFile: 'stereophoto3_l.JPG', rightImageFile: 'stereophoto3_r.JPG'},
+    {leftImageFile: 'stereophoto4_l.JPG', rightImageFile: 'stereophoto4_r.JPG'},
+
+    {leftImageFile: 'stereophoto5_l.JPG', rightImageFile: 'stereophoto5_r.JPG'},
+    {leftImageFile: 'stereophoto6_l.png', rightImageFile: 'stereophoto6_r.png'},
+    {leftImageFile: 'P1030006_l.png', rightImageFile: 'P1030006_r.png'},
+    {leftImageFile: 'P1030056_l.PNG', rightImageFile: 'P1030056_r.PNG'},
+
+    {leftImageFile: 'P1030081_l.PNG', rightImageFile: 'P1030081_r.PNG'},
+    {leftImageFile: 'P1030083_l.PNG', rightImageFile: 'P1030083_r.PNG'},
+    {leftImageFile: 'P1030109_l.PNG', rightImageFile: 'P1030109_r.PNG'},
+    {leftImageFile: 'P1030141_l.PNG', rightImageFile: 'P1030141_r.PNG'},
+
+    {leftImageFile: 'P1030145_l.PNG', rightImageFile: 'P1030145_r.PNG'},
+    {leftImageFile: 'P1030178_l.PNG', rightImageFile: 'P1030178_r.PNG'},
+    {leftImageFile: 'P1030198_l.PNG', rightImageFile: 'P1030198_r.PNG'},
+    {leftImageFile: 'P1030211_l.PNG', rightImageFile: 'P1030211_r.PNG'},
+
+    {leftImageFile: 'P1030229_l.PNG', rightImageFile: 'P1030229_r.PNG'},
+    {leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG'},
+    {leftImageFile: 'P1030252_l.PNG', rightImageFile: 'P1030252_r.PNG'},
+    {leftImageFile: 'P1030257_l.PNG', rightImageFile: 'P1030257_r.PNG'},
+];
+
 main();
 
 function main() {
 
+    const roomSize = 10;
     const scene = new THREE.Scene();
     const camera = createCamera();
     const renderer = createRenderer();
@@ -12,13 +41,19 @@ function main() {
     camera.position.x = 0;
     camera.position.y = 1.5;
     camera.position.z = 0;
+
     camera.layers.enable(1);
     camera.layers.enable(2);
 
-    const roomSize = 10;
     addRoom(scene, roomSize);
-    addStereoPhotos(scene, roomSize);
     addLights(scene, roomSize);
+
+    const photoIndex = 0;
+    const photoFrames = addPhotoFrames(scene, roomSize);
+    loadStereoPhoto(photoFrames.front, stereoPhotos[photoIndex]);
+    loadStereoPhoto(photoFrames.back, stereoPhotos[photoIndex + 1]);
+    loadStereoPhoto(photoFrames.left, stereoPhotos[photoIndex + 2]);
+    loadStereoPhoto(photoFrames.right, stereoPhotos[photoIndex + 3]);
 
     renderer.setAnimationLoop(function () {
         if (!renderer.xr.isPresenting) {
@@ -41,55 +76,46 @@ function addRoom(scene, roomSize) {
     return mesh;
 }
 
-function addStereoPhotos(scene, roomSize) {
+function addPhotoFrames(scene, roomSize) {
 
     const width = roomSize * 0.50;
     const height = width / 1.333;
 
-    const photo1 = addStereoPhoto(scene, width, height,
-        'textures/stereophoto1_l.JPG', 'textures/stereophoto1_r.JPG');
-
-    const photo2 = addStereoPhoto(scene, width, height,
-        'textures/stereophoto2_l.JPG', 'textures/stereophoto2_r.JPG');
-
-    const photo3 = addStereoPhoto(scene, width, height,
-        'textures/stereophoto3_l.JPG', 'textures/stereophoto3_r.JPG');
-
-    const photo4 = addStereoPhoto(scene, width, height,
-        'textures/stereophoto4_l.JPG', 'textures/stereophoto4_r.JPG');
-
-    const photo5 = addStereoPhoto(scene, width, height,
-        'textures/stereophoto5_l.JPG', 'textures/stereophoto5_r.JPG');
+    const frame1 = addPhotoFrame(scene, width, height);
+    const frame2 = addPhotoFrame(scene, width, height);
+    const frame3 = addPhotoFrame(scene, width, height);
+    const frame4 = addPhotoFrame(scene, width, height);
 
     const heightAboveFloor = height / 2;
-    const distanceToWall = roomSize * 0.99 / 2;
-    const distanceToCeiling = roomSize * 0.99;
+    const distanceToWall = roomSize * 0.98 / 2;
 
-    photo1.position.set(0, heightAboveFloor, -distanceToWall);
-    photo2.position.set(0, heightAboveFloor, distanceToWall);
-    photo3.position.set(-distanceToWall, heightAboveFloor, 0);
-    photo4.position.set(distanceToWall, heightAboveFloor, 0);
-    photo5.position.set(0, distanceToCeiling, 0);
+    frame1.group.position.set(0, heightAboveFloor, -distanceToWall);
+    frame2.group.position.set(0, heightAboveFloor, distanceToWall);
+    frame3.group.position.set(-distanceToWall, heightAboveFloor, 0);
+    frame4.group.position.set(distanceToWall, heightAboveFloor, 0);
 
-    photo1.rotation.y = 0;
-    photo2.rotation.y = Math.PI;
-    photo3.rotation.y = Math.PI / 2;
-    photo4.rotation.y = -Math.PI / 2;
-    photo5.rotation.x = Math.PI / 2;
+    frame1.group.rotation.y = 0;
+    frame2.group.rotation.y = Math.PI;
+    frame3.group.rotation.y = Math.PI / 2;
+    frame4.group.rotation.y = -Math.PI / 2;
 
+    return {
+        front: frame1,
+        back: frame2,
+        left: frame3,
+        right: frame4
+    };
 }
 
-function addStereoPhoto(scene, width, height, leftImage, rightImage) {
+function addPhotoFrame(scene, width, height) {
 
     const lGeometry = new THREE.PlaneGeometry(width, height);
-    const lTexture = loadPhotoTexture(leftImage);
-    const lMaterial = new THREE.MeshStandardMaterial({map: lTexture});
+    const lMaterial = new THREE.MeshBasicMaterial();
     const lMesh = new THREE.Mesh(lGeometry, lMaterial);
     lMesh.layers.set(1);
 
     const rGeometry = new THREE.PlaneGeometry(width, height);
-    const rTexture = loadPhotoTexture(rightImage);
-    const rMaterial = new THREE.MeshStandardMaterial({map: rTexture});
+    const rMaterial = new THREE.MeshBasicMaterial();
     const rMesh = new THREE.Mesh(rGeometry, rMaterial);
     rMesh.layers.set(2);
 
@@ -97,7 +123,25 @@ function addStereoPhoto(scene, width, height, leftImage, rightImage) {
     group.add(lMesh);
     group.add(rMesh);
     scene.add(group);
-    return group;
+    return {
+        left: lMesh,
+        right: rMesh,
+        group: group
+    };
+}
+
+function loadStereoPhoto(photoFrame, stereoPhoto) {
+    const folder = 'textures/'
+    loadPhotoTexture(folder + stereoPhoto.leftImageFile, texture => {
+        photoFrame.left.material.map = texture;
+        photoFrame.left.material.needsUpdate = true;
+        console.log('Left photo loaded')
+    });
+    loadPhotoTexture(folder + stereoPhoto.rightImageFile, texture => {
+        photoFrame.right.material.map = texture;
+        photoFrame.right.material.needsUpdate = true;
+        console.log('Right photo loaded')
+    });
 }
 
 function addLights(scene, roomSize) {
@@ -169,8 +213,8 @@ function loadWallTextures() {
     return textures;
 }
 
-function loadPhotoTexture(path) {
-    const texture = loadTexture(path);
+function loadPhotoTexture(path, onComplete) {
+    const texture = loadTexture(path, onComplete);
     texture.wrapS = THREE.ClampToEdgeWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
     texture.magFilter = THREE.LinearFilter;
@@ -184,13 +228,16 @@ function loadRepeatingTexture(path) {
     texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.LinearFilter;
     texture.minFilter = THREE.LinearMipMapLinearFilter;
-    texture.anisotropy = 4
     return texture;
 }
 
-function loadTexture(path) {
+function loadTexture(path, onComplete) {
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(path);
+    const texture = textureLoader.load(path, () => {
+        if (onComplete) {
+            onComplete(texture);
+        }
+    });
     texture.encoding = THREE.sRGBEncoding;
     return texture;
 }
