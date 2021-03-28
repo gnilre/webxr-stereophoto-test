@@ -73,7 +73,7 @@ function addRoom(scene, roomSize) {
 
     const textures = loadWallTextures();
     const materials = createWallMaterials(textures);
-    const geometry = new THREE.BoxGeometry(roomSize, roomSize, roomSize);
+    const geometry = new THREE.BoxBufferGeometry(roomSize, roomSize, roomSize);
     const mesh = new THREE.Mesh(geometry, materials);
 
     mesh.position.set(0, roomSize / 2, 0);
@@ -114,14 +114,14 @@ function addPhotoFrames(scene, roomSize) {
 
 function addPhotoFrame(scene, width, height) {
 
-    const lGeometry = new THREE.PlaneGeometry(1, 1);
+    const lGeometry = new THREE.PlaneBufferGeometry(1, 1);
     const lMaterial = new THREE.MeshBasicMaterial();
     const lMesh = new THREE.Mesh(lGeometry, lMaterial);
     lMesh.scale.x = width;
     lMesh.scale.y = height;
     lMesh.layers.set(1);
 
-    const rGeometry = new THREE.PlaneGeometry(1, 1);
+    const rGeometry = new THREE.PlaneBufferGeometry(1, 1);
     const rMaterial = new THREE.MeshBasicMaterial();
     const rMesh = new THREE.Mesh(rGeometry, rMaterial);
     rMesh.scale.x = width;
@@ -285,7 +285,7 @@ function createCamera() {
 
 function createRenderer() {
 
-    const renderer = new THREE.WebGLRenderer({antialias: true});
+    const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.xr.enabled = true;
