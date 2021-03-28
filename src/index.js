@@ -48,9 +48,12 @@ function main() {
     addRoom(scene, roomSize);
     addLights(scene, roomSize);
 
-    const photoStartIndex = 0;
+    let photoStartIndex = 0;
     const photoFrames = addPhotoFrames(scene, roomSize);
     loadStereoPhotos(photoFrames, photoStartIndex);
+
+    const controller1 = renderer.xr.getController(0);
+    controller1.addEventListener('selectend', onSelectEnd);
 
     renderer.setAnimationLoop(function () {
         if (!renderer.xr.isPresenting) {
@@ -58,6 +61,11 @@ function main() {
         }
         renderer.render(scene, camera);
     });
+
+    function onSelectEnd() {
+        photoStartIndex = (photoStartIndex + 4) % stereoPhotos.length;
+        loadStereoPhotos(photoFrames, photoStartIndex);
+    }
 
 }
 
