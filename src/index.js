@@ -48,12 +48,9 @@ function main() {
     addRoom(scene, roomSize);
     addLights(scene, roomSize);
 
-    const photoIndex = 0;
+    const photoStartIndex = 0;
     const photoFrames = addPhotoFrames(scene, roomSize);
-    loadStereoPhoto(photoFrames.front, stereoPhotos[photoIndex]);
-    loadStereoPhoto(photoFrames.back, stereoPhotos[photoIndex + 1]);
-    loadStereoPhoto(photoFrames.left, stereoPhotos[photoIndex + 2]);
-    loadStereoPhoto(photoFrames.right, stereoPhotos[photoIndex + 3]);
+    loadStereoPhotos(photoFrames, photoStartIndex);
 
     renderer.setAnimationLoop(function () {
         if (!renderer.xr.isPresenting) {
@@ -128,6 +125,13 @@ function addPhotoFrame(scene, width, height) {
         right: rMesh,
         group: group
     };
+}
+
+function loadStereoPhotos(photoFrames, photoStartIndex) {
+    loadStereoPhoto(photoFrames.front, stereoPhotos[photoStartIndex]);
+    loadStereoPhoto(photoFrames.back, stereoPhotos[photoStartIndex + 1]);
+    loadStereoPhoto(photoFrames.left, stereoPhotos[photoStartIndex + 2]);
+    loadStereoPhoto(photoFrames.right, stereoPhotos[photoStartIndex + 3]);
 }
 
 function loadStereoPhoto(photoFrame, stereoPhoto) {
