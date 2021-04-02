@@ -27,6 +27,16 @@ const stereoPhotos = [
     {leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG'},
     {leftImageFile: 'P1030252_l.PNG', rightImageFile: 'P1030252_r.PNG'},
     {leftImageFile: 'P1030257_l.PNG', rightImageFile: 'P1030257_r.PNG'},
+
+    {leftImageFile: 'DSCF4009_l.PNG', rightImageFile: 'DSCF4009_r.PNG'},
+    {leftImageFile: 'DSCF4014_l.PNG', rightImageFile: 'DSCF4014_r.PNG'},
+    {leftImageFile: 'DSCF4019_l.PNG', rightImageFile: 'DSCF4019_r.PNG'},
+    {leftImageFile: 'DSCF4035_l.PNG', rightImageFile: 'DSCF4035_r.PNG'},
+
+    {leftImageFile: 'DSCF4039_l.PNG', rightImageFile: 'DSCF4039_r.PNG'},
+    {leftImageFile: 'DSCF4041_l.PNG', rightImageFile: 'DSCF4041_r.PNG'},
+    {leftImageFile: 'DSCF4044_l.PNG', rightImageFile: 'DSCF4044_r.PNG'},
+    {leftImageFile: 'DSCF4045_l.PNG', rightImageFile: 'DSCF4045_r.PNG'},
 ];
 
 main();
