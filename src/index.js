@@ -147,33 +147,41 @@ function loadStereoPhotos(photoFrames, photoStartIndex) {
 }
 
 function loadStereoPhoto(photoFrame, stereoPhoto) {
-    loadStereoPhotoImage(photoFrame.group, photoFrame.left, stereoPhoto.leftImageFile);
-    loadStereoPhotoImage(photoFrame.group, photoFrame.right, stereoPhoto.rightImageFile);
+    hideImageFromFrame(photoFrame.left);
+    hideImageFromFrame(photoFrame.right);
+    loadPhotoTextures([
+        'textures/' + stereoPhoto.leftImageFile,
+        'textures/' + stereoPhoto.rightImageFile,
+    ], textures => {
+        showImageInFrame(photoFrame.group, photoFrame.left, textures[0]);
+        showImageInFrame(photoFrame.group, photoFrame.right, textures[1]);
+    });
 }
 
-function loadStereoPhotoImage(group, imageFrame, imageFile) {
+function hideImageFromFrame(imageFrame) {
     imageFrame.material.color.setHex(0x080808);
     if (imageFrame.material.map) {
         imageFrame.material.map.dispose();
         imageFrame.material.map = null;
     }
     imageFrame.material.needsUpdate = true;
-    loadPhotoTexture('textures/' + imageFile, texture => {
+}
 
-        // Update texture:
-        imageFrame.material.map = texture;
-        imageFrame.material.color.setHex(0xffffff);
-        imageFrame.material.needsUpdate = true;
+function showImageInFrame(group, imageFrame, texture) {
 
-        // Update frame size according to the aspect ratio of the photo:
-        const aspectRatio = texture.image.width / texture.image.height;
-        imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
+    // Update texture:
+    imageFrame.material.map = texture;
+    imageFrame.material.color.setHex(0xffffff);
+    imageFrame.material.needsUpdate = true;
 
-        // Adjust photo frame vertical position:
-        const frameHeight = imageFrame.scale.y;
-        group.position.y = frameHeight / 2;
+    // Update frame size according to the aspect ratio of the photo:
+    const aspectRatio = texture.image.width / texture.image.height;
+    imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
 
-    });
+    // Adjust photo frame vertical position:
+    const frameHeight = imageFrame.scale.y;
+    group.position.y = frameHeight / 2;
+
 }
 
 function addLights(scene, roomSize) {
@@ -245,13 +253,16 @@ function loadWallTextures() {
     return textures;
 }
 
-function loadPhotoTexture(path, onComplete) {
-    const texture = loadTexture(path, onComplete);
-    texture.wrapS = THREE.ClampToEdgeWrapping;
-    texture.wrapT = THREE.ClampToEdgeWrapping;
-    texture.magFilter = THREE.LinearFilter;
-    texture.minFilter = THREE.LinearMipMapLinearFilter;
-    return texture;
+function loadPhotoTextures(paths, onComplete) {
+    loadTextures(paths, textures => {
+        for (let i = 0; i < textures.length; i++) {
+            textures[i].wrapS = THREE.ClampToEdgeWrapping;
+            textures[i].wrapT = THREE.ClampToEdgeWrapping;
+            textures[i].magFilter = THREE.LinearFilter;
+            textures[i].minFilter = THREE.LinearMipMapLinearFilter;
+        }
+        onComplete(textures);
+    });
 }
 
 function loadRepeatingTexture(path) {
@@ -261,6 +272,20 @@ function loadRepeatingTexture(path) {
     texture.magFilter = THREE.LinearFilter;
     texture.minFilter = THREE.LinearMipMapLinearFilter;
     return texture;
+}
+
+function loadTextures(paths, onComplete) {
+    const promises = [];
+    const textureLoader = new THREE.TextureLoader();
+    for (let i = 0; i < paths.length; i++) {
+        promises.push(new Promise((resolve, reject) => {
+            const texture = textureLoader.load(paths[i], (texture) => resolve(texture));
+            texture.encoding = THREE.sRGBEncoding;
+        }));
+    }
+    Promise.all(promises).then((textures) => {
+        onComplete(textures)
+    });
 }
 
 function loadTexture(path, onComplete) {
