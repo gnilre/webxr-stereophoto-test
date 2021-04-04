@@ -1,5 +1,6 @@
 import * as THREE from './three/three.module.js';
 import {VRButton} from './three/examples/jsm/webxr/VRButton.js';
+import {XRControllerModelFactory} from './three/examples/jsm/webxr/XRControllerModelFactory.js';
 
 const stereoPhotos = [
 
@@ -62,13 +63,64 @@ function main() {
     const photoFrames = addPhotoFrames(scene, roomSize);
     loadStereoPhotos(photoFrames, photoStartIndex);
 
+    // Controllers
+
     const controller1 = renderer.xr.getController(0);
     controller1.addEventListener('selectend', onSelectEnd);
+    scene.add(controller1);
+
+    const controller2 = renderer.xr.getController(1);
+    controller2.addEventListener('selectend', onSelectEnd);
+    scene.add(controller2);
+
+    const controllerModelFactory = new XRControllerModelFactory();
+
+    const controllerGrip1 = renderer.xr.getControllerGrip(0);
+    controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
+    scene.add(controllerGrip1);
+
+    const controllerGrip2 = renderer.xr.getControllerGrip(1);
+    controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
+    scene.add(controllerGrip2);
+
+    // Laser pointers
+
+    const laserVertices = [
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, -1),
+    ];
+    const laserMaterial = new THREE.LineBasicMaterial({color: 0xaaffaa});
+    const laserGeometry = new THREE.BufferGeometry().setFromPoints(laserVertices);
+
+    const laser1 = new THREE.Line(laserGeometry, laserMaterial);
+    laser1.scale.z = 5;
+    controller1.add(laser1);
+
+    const laser2 = new THREE.Line(laserGeometry, laserMaterial);
+    laser2.scale.z = 5;
+    controller2.add(laser2);
+
+    // Mouse input
+
+    let mouseDown = false;
+    let clickX;
+    let clickY;
+    let clickRotation;
+    document.addEventListener('mousedown', event => {
+        mouseDown = true;
+        clickX = event.clientX;
+        clickY = event.clientY;
+        clickRotation = camera.rotation.y;
+    });
+    document.addEventListener('mouseup', () => mouseDown = false);
+    document.addEventListener('mousemove', event => {
+        if (mouseDown && !renderer.xr.isPresenting) {
+            const x = (event.clientX - clickX) / window.innerWidth;
+            camera.rotation.y = clickRotation + x * Math.PI;
+        }
+    });
 
     renderer.setAnimationLoop(function () {
-        if (!renderer.xr.isPresenting) {
-            camera.rotation.y -= 0.001;
-        }
         renderer.render(scene, camera);
     });
 
