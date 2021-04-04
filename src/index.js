@@ -3,28 +3,28 @@ import {VRButton} from './three/examples/jsm/webxr/VRButton.js';
 
 const stereoPhotos = [
 
-    {leftImageFile: 'stereophoto1_l.JPG', rightImageFile: 'stereophoto1_r.JPG'},
+    {leftImageFile: 'stereophoto1_l.JPG', rightImageFile: 'stereophoto1_r.JPG', scale: 0.8},
     {leftImageFile: 'stereophoto2_l.JPG', rightImageFile: 'stereophoto2_r.JPG'},
     {leftImageFile: 'stereophoto3_l.JPG', rightImageFile: 'stereophoto3_r.JPG'},
     {leftImageFile: 'stereophoto4_l.JPG', rightImageFile: 'stereophoto4_r.JPG'},
 
-    {leftImageFile: 'stereophoto5_l.JPG', rightImageFile: 'stereophoto5_r.JPG'},
-    {leftImageFile: 'stereophoto6_l.png', rightImageFile: 'stereophoto6_r.png'},
+    {leftImageFile: 'stereophoto5_l.JPG', rightImageFile: 'stereophoto5_r.JPG', scale: 0.8},
+    {leftImageFile: 'stereophoto6_l.png', rightImageFile: 'stereophoto6_r.png', scale: 0.5},
     {leftImageFile: 'P1030006_l.png', rightImageFile: 'P1030006_r.png'},
     {leftImageFile: 'P1030056_l.PNG', rightImageFile: 'P1030056_r.PNG'},
 
-    {leftImageFile: 'P1030081_l.PNG', rightImageFile: 'P1030081_r.PNG'},
-    {leftImageFile: 'P1030083_l.PNG', rightImageFile: 'P1030083_r.PNG'},
+    {leftImageFile: 'P1030081_l.PNG', rightImageFile: 'P1030081_r.PNG', scale: 0.5},
+    {leftImageFile: 'P1030083_l.PNG', rightImageFile: 'P1030083_r.PNG', scale: 0.5},
     {leftImageFile: 'P1030109_l.PNG', rightImageFile: 'P1030109_r.PNG'},
-    {leftImageFile: 'P1030141_l.PNG', rightImageFile: 'P1030141_r.PNG'},
+    {leftImageFile: 'P1030141_l.PNG', rightImageFile: 'P1030141_r.PNG', scale: 0.8},
 
     {leftImageFile: 'P1030145_l.PNG', rightImageFile: 'P1030145_r.PNG'},
     {leftImageFile: 'P1030178_l.PNG', rightImageFile: 'P1030178_r.PNG'},
-    {leftImageFile: 'P1030198_l.PNG', rightImageFile: 'P1030198_r.PNG'},
+    {leftImageFile: 'P1030198_l.PNG', rightImageFile: 'P1030198_r.PNG', scale: 0.8},
     {leftImageFile: 'P1030211_l.PNG', rightImageFile: 'P1030211_r.PNG'},
 
-    {leftImageFile: 'P1030229_l.PNG', rightImageFile: 'P1030229_r.PNG'},
-    {leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG'},
+    {leftImageFile: 'P1030229_l.PNG', rightImageFile: 'P1030229_r.PNG', scale: 0.8},
+    {leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG', scale: 0.7},
     {leftImageFile: 'P1030252_l.PNG', rightImageFile: 'P1030252_r.PNG'},
     {leftImageFile: 'P1030257_l.PNG', rightImageFile: 'P1030257_r.PNG'},
 
@@ -145,7 +145,8 @@ function addPhotoFrame(scene, width, height) {
     return {
         left: lMesh,
         right: rMesh,
-        group: group
+        group: group,
+        width: width
     };
 }
 
@@ -163,8 +164,8 @@ function loadStereoPhoto(photoFrame, stereoPhoto) {
         'textures/' + stereoPhoto.leftImageFile,
         'textures/' + stereoPhoto.rightImageFile,
     ], textures => {
-        showImageInFrame(photoFrame.group, photoFrame.left, textures[0]);
-        showImageInFrame(photoFrame.group, photoFrame.right, textures[1]);
+        showImageInFrame(stereoPhoto, photoFrame, photoFrame.left, textures[0]);
+        showImageInFrame(stereoPhoto, photoFrame, photoFrame.right, textures[1]);
     });
 }
 
@@ -177,7 +178,7 @@ function hideImageFromFrame(imageFrame) {
     imageFrame.material.needsUpdate = true;
 }
 
-function showImageInFrame(group, imageFrame, texture) {
+function showImageInFrame(stereoPhoto, photoFrame, imageFrame, texture) {
 
     // Update texture:
     imageFrame.material.map = texture;
@@ -186,11 +187,13 @@ function showImageInFrame(group, imageFrame, texture) {
 
     // Update frame size according to the aspect ratio of the photo:
     const aspectRatio = texture.image.width / texture.image.height;
+    const scale = stereoPhoto.scale ? stereoPhoto.scale : 1.0;
+    imageFrame.scale.x = photoFrame.width * scale;
     imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
 
     // Adjust photo frame vertical position:
     const frameHeight = imageFrame.scale.y;
-    group.position.y = frameHeight / 2;
+    photoFrame.group.position.y = frameHeight / 2;
 
 }
 
@@ -288,7 +291,7 @@ function loadTextures(paths, onComplete) {
     const promises = [];
     const textureLoader = new THREE.TextureLoader();
     for (let i = 0; i < paths.length; i++) {
-        promises.push(new Promise((resolve, reject) => {
+        promises.push(new Promise((resolve) => {
             const texture = textureLoader.load(paths[i], (texture) => resolve(texture));
             texture.encoding = THREE.sRGBEncoding;
         }));
