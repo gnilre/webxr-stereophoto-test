@@ -133,14 +133,47 @@ function main() {
 
 function addRoom(scene, roomSize) {
 
-    const textures = loadWallTextures();
-    const materials = createWallMaterials(textures);
-    const geometry = new THREE.BoxBufferGeometry(roomSize, roomSize, roomSize);
-    const mesh = new THREE.Mesh(geometry, materials);
+    const g = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_ground.jpg', 10));
+    const c = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_ceiling.png', 8));
+    const f = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_front.png', 8));
+    const b = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_back.png', 8));
+    const l = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_left.png', 8));
+    const r = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_right.png', 8));
 
-    mesh.position.set(0, roomSize / 2, 0);
-    scene.add(mesh);
-    return mesh;
+    g.position.set(0, 0, 0);
+    c.position.set(0, roomSize, 0);
+    f.position.set(0, roomSize / 2, -roomSize / 2);
+    b.position.set(0, roomSize / 2, roomSize / 2);
+    l.position.set(-roomSize / 2, roomSize / 2, 0);
+    r.position.set(roomSize / 2, roomSize / 2, 0);
+
+    g.rotation.x = -Math.PI / 2;
+    c.rotation.x = Math.PI / 2;
+    f.rotation.y = 0;
+    b.rotation.y = Math.PI;
+    l.rotation.y = Math.PI / 2;
+    r.rotation.y = -Math.PI / 2;
+
+    g.name = 'ground';
+    c.name = 'ceiling';
+    f.name = 'wall';
+    b.name = 'wall';
+    l.name = 'wall';
+    r.name = 'wall';
+
+    scene.add(g);
+    scene.add(c);
+    scene.add(f);
+    scene.add(b);
+    scene.add(l);
+    scene.add(r);
+
+}
+
+function createWall(width, height, texture) {
+    const groundGeometry = new THREE.PlaneBufferGeometry(width, height);
+    const groundMaterial = new THREE.MeshStandardMaterial({map: texture});
+    return new THREE.Mesh(groundGeometry, groundMaterial);
 }
 
 function addPhotoFrames(scene, roomSize) {
@@ -300,24 +333,6 @@ function createSpotLight() {
     return new THREE.SpotLight(0xffffcc, 1.75, 100, Math.PI / 3, 0.75, 2);
 }
 
-function loadWallTextures() {
-    const textures = [];
-
-    textures[0] = loadRepeatingTexture('textures/wall1.png')
-    textures[1] = loadRepeatingTexture('textures/wall2.png')
-    textures[2] = loadRepeatingTexture('textures/wall3.png')
-    textures[3] = loadRepeatingTexture('textures/floor.jpg')
-    textures[4] = loadRepeatingTexture('textures/wall4.png')
-    textures[5] = loadRepeatingTexture('textures/wall5.png')
-
-    for (let i = 0; i < textures.length; i++) {
-        textures[i].repeat.set(8, 8);
-    }
-
-    textures[3].repeat.set(10, 10);
-    return textures;
-}
-
 function loadPhotoTextures(paths, onComplete) {
     loadTextures(paths, textures => {
         for (let i = 0; i < textures.length; i++) {
@@ -330,12 +345,13 @@ function loadPhotoTextures(paths, onComplete) {
     });
 }
 
-function loadRepeatingTexture(path) {
+function loadRepeatingTexture(path, numRepeats) {
     const texture = loadTexture(path);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.LinearFilter;
     texture.minFilter = THREE.LinearMipMapLinearFilter;
+    texture.repeat.set(numRepeats, numRepeats);
     return texture;
 }
 
@@ -362,14 +378,6 @@ function loadTexture(path, onComplete) {
     });
     texture.encoding = THREE.sRGBEncoding;
     return texture;
-}
-
-function createWallMaterials(textures) {
-    const materials = [];
-    for (let i = 0; i < textures.length; i++) {
-        materials[i] = new THREE.MeshStandardMaterial({map: textures[i], side: THREE.BackSide});
-    }
-    return materials;
 }
 
 function createCamera() {
