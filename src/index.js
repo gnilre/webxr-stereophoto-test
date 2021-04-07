@@ -120,6 +120,14 @@ function main() {
         }
     });
 
+    window.addEventListener( 'resize', () => {
+        if(!renderer.xr.isPresenting) {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+    });
+
     renderer.setAnimationLoop(function () {
         renderer.render(scene, camera);
     });
