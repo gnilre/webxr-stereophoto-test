@@ -139,14 +139,14 @@ function main() {
 
 }
 
-function addRoom(scene, roomSize) {
+async function addRoom(scene, roomSize) {
 
-    const g = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_ground.jpg', 10));
-    const c = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_ceiling.png', 8));
-    const f = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_front.png', 8));
-    const b = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_back.png', 8));
-    const l = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_left.png', 8));
-    const r = createWall(roomSize, roomSize, loadRepeatingTexture('textures/wall_right.png', 8));
+    const g = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_ground.jpg', 10));
+    const c = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_ceiling.png', 8));
+    const f = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_front.png', 8));
+    const b = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_back.png', 8));
+    const l = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_left.png', 8));
+    const r = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_right.png', 8));
 
     g.position.set(0, 0, 0);
     c.position.set(0, roomSize, 0);
@@ -353,8 +353,8 @@ function loadPhotoTextures(paths, onComplete) {
     });
 }
 
-function loadRepeatingTexture(path, numRepeats) {
-    const texture = loadTexture(path);
+async function loadRepeatingTexture(path, numRepeats) {
+    const texture = await loadTexture(path);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.LinearFilter;
@@ -368,24 +368,21 @@ function loadTextures(paths, onComplete) {
     const textureLoader = new THREE.TextureLoader();
     for (let i = 0; i < paths.length; i++) {
         promises.push(new Promise((resolve) => {
-            const texture = textureLoader.load(paths[i], (texture) => resolve(texture));
+            const texture = textureLoader.load(paths[i], (t) => resolve(t));
             texture.encoding = THREE.sRGBEncoding;
         }));
     }
-    Promise.all(promises).then((textures) => {
-        onComplete(textures)
-    });
+    Promise.all(promises).then((textures) => onComplete(textures));
 }
 
-function loadTexture(path, onComplete) {
+async function loadTexture(path, onComplete) {
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(path, () => {
-        if (onComplete) {
-            onComplete(texture);
-        }
+    return await new Promise(resolve => {
+        textureLoader.load(path, texture => {
+            texture.encoding = THREE.sRGBEncoding;
+            resolve(texture);
+        });
     });
-    texture.encoding = THREE.sRGBEncoding;
-    return texture;
 }
 
 function createCamera() {
