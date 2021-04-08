@@ -1,4 +1,4 @@
-import * as THREE from './three/three.module.js';
+import * as THREE from './three/build/three.module.js';
 import {VRButton} from './three/examples/jsm/webxr/VRButton.js';
 import {XRControllerModelFactory} from './three/examples/jsm/webxr/XRControllerModelFactory.js';
 
