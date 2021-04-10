@@ -4,13 +4,13 @@ import {XRControllerModelFactory} from './three/examples/jsm/webxr/XRControllerM
 
 const stereoPhotos = [
 
-    {leftImageFile: 'stereophoto1_l.JPG', rightImageFile: 'stereophoto1_r.JPG', scale: 0.8},
-    {leftImageFile: 'stereophoto2_l.JPG', rightImageFile: 'stereophoto2_r.JPG'},
-    {leftImageFile: 'stereophoto3_l.JPG', rightImageFile: 'stereophoto3_r.JPG'},
-    {leftImageFile: 'stereophoto4_l.JPG', rightImageFile: 'stereophoto4_r.JPG'},
+    {leftImageFile: 'P1030842_l.JPG', rightImageFile: 'P1030842_r.JPG', scale: 0.8},
+    {leftImageFile: 'P1030485_l.JPG', rightImageFile: 'P1030485_r.JPG'},
+    {leftImageFile: 'P1030674_l.JPG', rightImageFile: 'P1030674_r.JPG'},
+    {leftImageFile: 'P1030754_l.JPG', rightImageFile: 'P1030754_r.JPG'},
 
-    {leftImageFile: 'stereophoto5_l.JPG', rightImageFile: 'stereophoto5_r.JPG', scale: 0.8},
-    {leftImageFile: 'stereophoto6_l.png', rightImageFile: 'stereophoto6_r.png', scale: 0.5},
+    {leftImageFile: 'P1030745_l.JPG', rightImageFile: 'P1030745_r.JPG', scale: 0.8},
+    {leftImageFile: 'P1000829_l.png', rightImageFile: 'P1000829_r.png', scale: 0.5},
     {leftImageFile: 'P1030006_l.png', rightImageFile: 'P1030006_r.png'},
     {leftImageFile: 'P1030056_l.PNG', rightImageFile: 'P1030056_r.PNG'},
 
