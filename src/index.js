@@ -250,7 +250,7 @@ function loadStereoPhotos(photoFrames, photoStartIndex) {
     loadStereoPhoto(photoFrames.right, stereoPhotos[photoStartIndex + 3]);
 }
 
-function loadStereoPhoto(photoFrame, stereoPhoto) {
+async function loadStereoPhoto(photoFrame, stereoPhoto) {
     hideImageFromFrame(photoFrame.left);
     hideImageFromFrame(photoFrame.right);
     loadPhotoTextures([
