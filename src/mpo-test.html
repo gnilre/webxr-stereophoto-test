@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MPO split test</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+
+        import { MpoSplitter } from './MpoSplitter.js';
+        import { MpoImageLoader } from './MpoImageLoader.js';
+
+        fetch('textures/P1000035.MPO')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
+
+        fetch('textures/P1000057.MPO')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
+
+        function readImagesFromMpo(arrayBuffer) {
+            new MpoSplitter().split(arrayBuffer).forEach(image => {
+
+                const buffer = arrayBuffer;
+                const offset = image.startPosition;
+                const length = image.length;
+
+                const blob = new Blob([new Uint8Array(arrayBuffer, offset, length)], { type: "image/jpeg" });
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(blob);
+                img.width = 256;
+                img.height = 192;
+                document.getElementById('images').appendChild(img);
+
+            });
+        }
+
+    </script>
+    <div id="images"></div>
+</body>
+
+</html>
