@@ -30,6 +30,9 @@ class MpoSplitter {
 
                     // SOF marker
                     console.log('Start of Frame (baseline): ' + i);
+                    image.height = dataView.getUint16(i + 5);
+                    image.width = dataView.getUint16(i + 7);
+                    console.log('--- Width: ' + image.width + ', Height: ' + image.height);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
