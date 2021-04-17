@@ -17,13 +17,13 @@ class MpoSplitter {
 
                     // SOI marker
                     console.log('--- Start of Image: ' + i);
-                    image = { buffer: arrayBuffer, startPosition: i };
+                    image = { buffer: arrayBuffer, startPosition: i + byteOffset };
 
                 } else if (nextByte == 0xD9) {
 
                     // EOI marker
                     console.log('--- End of Image: ' + i);
-                    image.length = i + 2 - image.startPosition;
+                    image.length = i + 2 - image.startPosition + byteOffset;
                     images.push(image);
 
                 } else if (nextByte == 0xC0) {

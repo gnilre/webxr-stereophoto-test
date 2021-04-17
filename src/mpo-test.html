@@ -27,20 +27,27 @@
             .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
 
         function readImagesFromMpo(arrayBuffer) {
-            new MpoSplitter().split(arrayBuffer).forEach(image => {
+            new MpoSplitter().split(arrayBuffer)
+                .forEach(image => appendImage(arrayBuffer, image));
+        }
 
-                const buffer = arrayBuffer;
-                const offset = image.startPosition;
-                const length = image.length;
+        function appendImage(arrayBuffer, image) {
 
-                const blob = new Blob([new Uint8Array(arrayBuffer, offset, length)], { type: "image/jpeg" });
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(blob);
-                img.width = 256;
-                img.height = 192;
-                document.getElementById('images').appendChild(img);
+            const buffer = arrayBuffer;
+            const offset = image.startPosition;
+            const length = image.length;
 
-            });
+            const blob = new Blob([new Uint8Array(arrayBuffer, offset, length)], { type: "image/jpeg" });
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(blob);
+            img.width = 256;//image.width;
+            img.height = 192;//image.height;
+            document.getElementById('images').appendChild(img);
+
+            if(image.thumbnail) {
+                appendImage(arrayBuffer, image.thumbnail);
+            }
+
         }
 
     </script>
