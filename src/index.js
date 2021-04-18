@@ -1,48 +1,56 @@
 import * as THREE from './three/build/three.module.js';
-import {VRButton} from './three/examples/jsm/webxr/VRButton.js';
-import {XRControllerModelFactory} from './three/examples/jsm/webxr/XRControllerModelFactory.js';
+import { VRButton } from './three/examples/jsm/webxr/VRButton.js';
+import { XRControllerModelFactory } from './three/examples/jsm/webxr/XRControllerModelFactory.js';
+import { MpoTextureLoader } from './MpoTextureLoader.js';
+
+const texturePath = 'textures/';
 
 const stereoPhotos = [
 
-    {leftImageFile: 'P1030842_l.JPG', rightImageFile: 'P1030842_r.JPG', scale: 0.8},
-    {leftImageFile: 'P1030485_l.JPG', rightImageFile: 'P1030485_r.JPG'},
-    {leftImageFile: 'P1030674_l.JPG', rightImageFile: 'P1030674_r.JPG'},
-    {leftImageFile: 'P1030754_l.JPG', rightImageFile: 'P1030754_r.JPG'},
+    { imageFile: 'P1000057.MPO' },
+    { imageFile: 'P1000057.MPO' },
+    { imageFile: 'P1000057.MPO' },
+    { imageFile: 'P1000057.MPO' },
 
-    {leftImageFile: 'P1030745_l.JPG', rightImageFile: 'P1030745_r.JPG', scale: 0.8},
-    {leftImageFile: 'P1000829_l.png', rightImageFile: 'P1000829_r.png', scale: 0.5},
-    {leftImageFile: 'P1030006_l.png', rightImageFile: 'P1030006_r.png'},
-    {leftImageFile: 'P1030056_l.PNG', rightImageFile: 'P1030056_r.PNG'},
+    { leftImageFile: 'P1030842_l.JPG', rightImageFile: 'P1030842_r.JPG', scale: 0.8 },
+    { leftImageFile: 'P1030485_l.JPG', rightImageFile: 'P1030485_r.JPG' },
+    { leftImageFile: 'P1030674_l.JPG', rightImageFile: 'P1030674_r.JPG' },
+    { leftImageFile: 'P1030754_l.JPG', rightImageFile: 'P1030754_r.JPG' },
 
-    {leftImageFile: 'P1030081_l.PNG', rightImageFile: 'P1030081_r.PNG', scale: 0.5},
-    {leftImageFile: 'P1030083_l.PNG', rightImageFile: 'P1030083_r.PNG', scale: 0.5},
-    {leftImageFile: 'P1030109_l.PNG', rightImageFile: 'P1030109_r.PNG'},
-    {leftImageFile: 'P1030141_l.PNG', rightImageFile: 'P1030141_r.PNG', scale: 0.8},
+    { leftImageFile: 'P1030745_l.JPG', rightImageFile: 'P1030745_r.JPG', scale: 0.8 },
+    { leftImageFile: 'P1000829_l.png', rightImageFile: 'P1000829_r.png', scale: 0.5 },
+    { leftImageFile: 'P1030006_l.png', rightImageFile: 'P1030006_r.png' },
+    { leftImageFile: 'P1030056_l.PNG', rightImageFile: 'P1030056_r.PNG' },
 
-    {leftImageFile: 'P1030145_l.PNG', rightImageFile: 'P1030145_r.PNG'},
-    {leftImageFile: 'P1030178_l.PNG', rightImageFile: 'P1030178_r.PNG'},
-    {leftImageFile: 'P1030198_l.PNG', rightImageFile: 'P1030198_r.PNG', scale: 0.8},
-    {leftImageFile: 'P1030211_l.PNG', rightImageFile: 'P1030211_r.PNG'},
+    { leftImageFile: 'P1030081_l.PNG', rightImageFile: 'P1030081_r.PNG', scale: 0.5 },
+    { leftImageFile: 'P1030083_l.PNG', rightImageFile: 'P1030083_r.PNG', scale: 0.5 },
+    { leftImageFile: 'P1030109_l.PNG', rightImageFile: 'P1030109_r.PNG' },
+    { leftImageFile: 'P1030141_l.PNG', rightImageFile: 'P1030141_r.PNG', scale: 0.8 },
 
-    {leftImageFile: 'P1030229_l.PNG', rightImageFile: 'P1030229_r.PNG', scale: 0.8},
-    {leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG', scale: 0.7},
-    {leftImageFile: 'P1030252_l.PNG', rightImageFile: 'P1030252_r.PNG'},
-    {leftImageFile: 'P1030257_l.PNG', rightImageFile: 'P1030257_r.PNG'},
+    { leftImageFile: 'P1030145_l.PNG', rightImageFile: 'P1030145_r.PNG' },
+    { leftImageFile: 'P1030178_l.PNG', rightImageFile: 'P1030178_r.PNG' },
+    { leftImageFile: 'P1030198_l.PNG', rightImageFile: 'P1030198_r.PNG', scale: 0.8 },
+    { leftImageFile: 'P1030211_l.PNG', rightImageFile: 'P1030211_r.PNG' },
 
-    {leftImageFile: 'DSCF4009_l.PNG', rightImageFile: 'DSCF4009_r.PNG'},
-    {leftImageFile: 'DSCF4014_l.PNG', rightImageFile: 'DSCF4014_r.PNG'},
-    {leftImageFile: 'DSCF4019_l.PNG', rightImageFile: 'DSCF4019_r.PNG'},
-    {leftImageFile: 'DSCF4035_l.PNG', rightImageFile: 'DSCF4035_r.PNG'},
+    { leftImageFile: 'P1030229_l.PNG', rightImageFile: 'P1030229_r.PNG', scale: 0.8 },
+    { leftImageFile: 'P1030234_l.PNG', rightImageFile: 'P1030234_r.PNG', scale: 0.7 },
+    { leftImageFile: 'P1030252_l.PNG', rightImageFile: 'P1030252_r.PNG' },
+    { leftImageFile: 'P1030257_l.PNG', rightImageFile: 'P1030257_r.PNG' },
 
-    {leftImageFile: 'DSCF4039_l.PNG', rightImageFile: 'DSCF4039_r.PNG'},
-    {leftImageFile: 'DSCF4041_l.PNG', rightImageFile: 'DSCF4041_r.PNG'},
-    {leftImageFile: 'DSCF4044_l.PNG', rightImageFile: 'DSCF4044_r.PNG'},
-    {leftImageFile: 'DSCF4045_l.PNG', rightImageFile: 'DSCF4045_r.PNG'},
+    { leftImageFile: 'DSCF4009_l.PNG', rightImageFile: 'DSCF4009_r.PNG' },
+    { leftImageFile: 'DSCF4014_l.PNG', rightImageFile: 'DSCF4014_r.PNG' },
+    { leftImageFile: 'DSCF4019_l.PNG', rightImageFile: 'DSCF4019_r.PNG' },
+    { leftImageFile: 'DSCF4035_l.PNG', rightImageFile: 'DSCF4035_r.PNG' },
+
+    { leftImageFile: 'DSCF4039_l.PNG', rightImageFile: 'DSCF4039_r.PNG' },
+    { leftImageFile: 'DSCF4041_l.PNG', rightImageFile: 'DSCF4041_r.PNG' },
+    { leftImageFile: 'DSCF4044_l.PNG', rightImageFile: 'DSCF4044_r.PNG' },
+    { leftImageFile: 'DSCF4045_l.PNG', rightImageFile: 'DSCF4045_r.PNG' },
 ];
 
 main();
 
-function main() {
+async function main() {
 
     const roomSize = 10;
     const scene = new THREE.Scene();
@@ -89,7 +97,7 @@ function main() {
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, -1),
     ];
-    const laserMaterial = new THREE.LineBasicMaterial({color: 0xaaffaa});
+    const laserMaterial = new THREE.LineBasicMaterial({ color: 0xaaffaa });
     const laserGeometry = new THREE.BufferGeometry().setFromPoints(laserVertices);
 
     const laser1 = new THREE.Line(laserGeometry, laserMaterial);
@@ -120,11 +128,11 @@ function main() {
         }
     });
 
-    window.addEventListener( 'resize', () => {
-        if(!renderer.xr.isPresenting) {
+    window.addEventListener('resize', () => {
+        if (!renderer.xr.isPresenting) {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setSize(window.innerWidth, window.innerHeight);
         }
     });
 
@@ -141,12 +149,12 @@ function main() {
 
 async function addRoom(scene, roomSize) {
 
-    const g = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_ground.jpg', 10));
-    const c = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_ceiling.png', 8));
-    const f = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_front.png', 8));
-    const b = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_back.png', 8));
-    const l = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_left.png', 8));
-    const r = createWall(roomSize, roomSize, await loadRepeatingTexture('textures/wall_right.png', 8));
+    const g = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_ground.jpg', 10));
+    const c = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_ceiling.png', 8));
+    const f = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_front.png', 8));
+    const b = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_back.png', 8));
+    const l = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_left.png', 8));
+    const r = createWall(roomSize, roomSize, await loadRepeatingTexture('wall_right.png', 8));
 
     g.position.set(0, 0, 0);
     c.position.set(0, roomSize, 0);
@@ -180,7 +188,7 @@ async function addRoom(scene, roomSize) {
 
 function createWall(width, height, texture) {
     const groundGeometry = new THREE.PlaneBufferGeometry(width, height);
-    const groundMaterial = new THREE.MeshStandardMaterial({map: texture});
+    const groundMaterial = new THREE.MeshStandardMaterial({ map: texture });
     return new THREE.Mesh(groundGeometry, groundMaterial);
 }
 
@@ -243,7 +251,7 @@ function addPhotoFrame(scene, width, height) {
     };
 }
 
-function loadStereoPhotos(photoFrames, photoStartIndex) {
+async function loadStereoPhotos(photoFrames, photoStartIndex) {
     loadStereoPhoto(photoFrames.front, stereoPhotos[photoStartIndex]);
     loadStereoPhoto(photoFrames.back, stereoPhotos[photoStartIndex + 1]);
     loadStereoPhoto(photoFrames.left, stereoPhotos[photoStartIndex + 2]);
@@ -253,12 +261,9 @@ function loadStereoPhotos(photoFrames, photoStartIndex) {
 async function loadStereoPhoto(photoFrame, stereoPhoto) {
     hideImageFromFrame(photoFrame.left);
     hideImageFromFrame(photoFrame.right);
-    loadPhotoTextures([
-        'textures/' + stereoPhoto.leftImageFile,
-        'textures/' + stereoPhoto.rightImageFile,
-    ], textures => {
-        showImageInFrame(stereoPhoto, photoFrame, photoFrame.left, textures[0]);
-        showImageInFrame(stereoPhoto, photoFrame, photoFrame.right, textures[1]);
+    loadPhotoTextures(stereoPhoto, textures => {
+        showImageInFrame(photoFrame, photoFrame.left, textures[0], stereoPhoto.scale);
+        showImageInFrame(photoFrame, photoFrame.right, textures[1], stereoPhoto.scale);
     });
 }
 
@@ -271,7 +276,7 @@ function hideImageFromFrame(imageFrame) {
     imageFrame.material.needsUpdate = true;
 }
 
-function showImageInFrame(stereoPhoto, photoFrame, imageFrame, texture) {
+function showImageInFrame(photoFrame, imageFrame, texture, scale = 1.0) {
 
     // Update texture:
     imageFrame.material.map = texture;
@@ -280,7 +285,6 @@ function showImageInFrame(stereoPhoto, photoFrame, imageFrame, texture) {
 
     // Update frame size according to the aspect ratio of the photo:
     const aspectRatio = texture.image.width / texture.image.height;
-    const scale = stereoPhoto.scale ? stereoPhoto.scale : 1.0;
     imageFrame.scale.x = photoFrame.width * scale;
     imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
 
@@ -341,16 +345,16 @@ function createSpotLight() {
     return new THREE.SpotLight(0xffffcc, 1.75, 100, Math.PI / 3, 0.75, 2);
 }
 
-function loadPhotoTextures(paths, onComplete) {
-    loadTextures(paths, textures => {
-        for (let i = 0; i < textures.length; i++) {
-            textures[i].wrapS = THREE.ClampToEdgeWrapping;
-            textures[i].wrapT = THREE.ClampToEdgeWrapping;
-            textures[i].magFilter = THREE.LinearFilter;
-            textures[i].minFilter = THREE.LinearMipMapLinearFilter;
-        }
-        onComplete(textures);
-    });
+function loadPhotoTextures(stereoPhoto, onComplete) {
+    if (stereoPhoto.imageFile) {
+        loadMpoTextures(stereoPhoto.imageFile, onComplete);
+    }
+    else if (stereoPhoto.leftImageFile) {
+        loadTextures([stereoPhoto.leftImageFile, stereoPhoto.rightImageFile], onComplete);
+    }
+    else {
+        console.error('No image path specified: ' + stereoPhoto);
+    }
 }
 
 async function loadRepeatingTexture(path, numRepeats) {
@@ -363,13 +367,22 @@ async function loadRepeatingTexture(path, numRepeats) {
     return texture;
 }
 
+function loadMpoTextures(path, onComplete) {
+    const textureLoader = new MpoTextureLoader();
+    textureLoader.load(texturePath + path, onComplete);
+}
+
 function loadTextures(paths, onComplete) {
     const promises = [];
     const textureLoader = new THREE.TextureLoader();
     for (let i = 0; i < paths.length; i++) {
         promises.push(new Promise((resolve) => {
-            const texture = textureLoader.load(paths[i], (t) => resolve(t));
+            const texture = textureLoader.load(texturePath + paths[i], (t) => resolve(t));
             texture.encoding = THREE.sRGBEncoding;
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            texture.magFilter = THREE.LinearFilter;
+            texture.minFilter = THREE.LinearMipMapLinearFilter;
         }));
     }
     Promise.all(promises).then((textures) => onComplete(textures));
@@ -378,7 +391,7 @@ function loadTextures(paths, onComplete) {
 async function loadTexture(path, onComplete) {
     const textureLoader = new THREE.TextureLoader();
     return await new Promise(resolve => {
-        textureLoader.load(path, texture => {
+        textureLoader.load(texturePath + path, texture => {
             texture.encoding = THREE.sRGBEncoding;
             resolve(texture);
         });
@@ -395,7 +408,7 @@ function createCamera() {
 
 function createRenderer() {
 
-    const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.xr.enabled = true;

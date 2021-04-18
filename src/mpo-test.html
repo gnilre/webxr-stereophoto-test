@@ -18,15 +18,7 @@
         import { MpoSplitter } from './MpoSplitter.js';
         import { MpoImageLoader } from './MpoImageLoader.js';
 
-        fetch('textures/P1000035.MPO')
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
-
         fetch('textures/P1000057.MPO')
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
-
-        fetch('textures/progressive.jpg')
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
 
