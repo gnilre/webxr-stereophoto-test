@@ -7,10 +7,10 @@ const texturePath = 'textures/';
 
 const stereoPhotos = [
 
-    { imageFile: 'P1000057.MPO' },
-    { imageFile: 'P1000057.MPO' },
-    { imageFile: 'P1000057.MPO' },
-    { imageFile: 'P1000057.MPO' },
+    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
+    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
+    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
+    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
 
     { leftImageFile: 'P1030842_l.JPG', rightImageFile: 'P1030842_r.JPG', scale: 0.8 },
     { leftImageFile: 'P1030485_l.JPG', rightImageFile: 'P1030485_r.JPG' },
@@ -50,7 +50,7 @@ const stereoPhotos = [
 
 main();
 
-async function main() {
+function main() {
 
     const roomSize = 10;
     const scene = new THREE.Scene();
@@ -347,7 +347,7 @@ function createSpotLight() {
 
 function loadPhotoTextures(stereoPhoto, onComplete) {
     if (stereoPhoto.imageFile) {
-        loadMpoTextures(stereoPhoto.imageFile, onComplete);
+        loadMpoTextures(stereoPhoto.imageFile, stereoPhoto.xOffset, stereoPhoto.yOffset, onComplete);
     }
     else if (stereoPhoto.leftImageFile) {
         loadTextures([stereoPhoto.leftImageFile, stereoPhoto.rightImageFile], onComplete);
@@ -367,9 +367,9 @@ async function loadRepeatingTexture(path, numRepeats) {
     return texture;
 }
 
-function loadMpoTextures(path, onComplete) {
+function loadMpoTextures(path, xOffset, yOffset, onComplete) {
     const textureLoader = new MpoTextureLoader();
-    textureLoader.load(texturePath + path, onComplete);
+    textureLoader.load(texturePath + path, xOffset, yOffset, onComplete);
 }
 
 function loadTextures(paths, onComplete) {
