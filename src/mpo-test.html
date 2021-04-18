@@ -26,6 +26,10 @@
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
 
+        fetch('textures/progressive.jpg')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => readImagesFromMpo(arrayBuffer));
+
         function readImagesFromMpo(arrayBuffer) {
             new MpoSplitter().split(arrayBuffer)
                 .forEach(image => appendImage(arrayBuffer, image));
@@ -33,18 +37,18 @@
 
         function appendImage(arrayBuffer, image) {
 
-            const buffer = arrayBuffer;
-            const offset = image.startPosition;
-            const length = image.length;
+            const bytearray = new Uint8Array(arrayBuffer, image.startPosition, image.length);
+            const blob = new Blob([bytearray], { type: "image/jpeg" });
 
-            const blob = new Blob([new Uint8Array(arrayBuffer, offset, length)], { type: "image/jpeg" });
             const img = document.createElement('img');
             img.src = URL.createObjectURL(blob);
-            img.width = 256;//image.width;
-            img.height = 192;//image.height;
-            document.getElementById('images').appendChild(img);
+            img.style = 'max-width: 100%; max-height: 100vh; margin: auto;';
 
-            if(image.thumbnail) {
+            const div = document.createElement('div');
+            div.appendChild(img);
+            document.getElementById('images').appendChild(div);
+
+            if (image.thumbnail) {
                 appendImage(arrayBuffer, image.thumbnail);
             }
 
