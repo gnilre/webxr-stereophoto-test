@@ -11,7 +11,6 @@ class MpoImageLoader {
     }
 
     async extractImages(arrayBuffer, xOffset, yOffset) {
-        const self = this;
         const images = new MpoSplitter().split(arrayBuffer);
         const imageBitmaps = [];
 
@@ -19,16 +18,16 @@ class MpoImageLoader {
             images[0],
             xOffset >= 0 ? xOffset : 0,
             yOffset >= 0 ? yOffset : 0,
-            images[0].width - xOffset,
-            images[0].height - xOffset
+            images[0].width - Math.abs(xOffset),
+            images[0].height - Math.abs(yOffset)
         );
 
         imageBitmaps[1] = this.createImage(
             images[1],
             xOffset < 0 ? -xOffset : 0,
             yOffset < 0 ? -yOffset : 0,
-            images[0].width - xOffset,
-            images[0].height - yOffset
+            images[0].width - Math.abs(xOffset),
+            images[0].height - Math.abs(yOffset)
         );
 
         return imageBitmaps;
