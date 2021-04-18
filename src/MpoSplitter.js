@@ -16,72 +16,72 @@ class MpoSplitter {
                 } else if (nextByte == 0xD8) {
 
                     // SOI marker
-                    console.log('--- Start of Image: ' + i);
+                    console.debug('--- Start of Image: ' + i);
                     image = { buffer: arrayBuffer, startPosition: i + byteOffset };
 
                 } else if (nextByte == 0xD9) {
 
                     // EOI marker
-                    console.log('--- End of Image: ' + i);
+                    console.debug('--- End of Image: ' + i);
                     image.length = i + 2 - image.startPosition + byteOffset;
                     images.push(image);
 
                 } else if (nextByte == 0xC0) {
 
                     // SOF marker
-                    console.log('Start of Frame (baseline): ' + i);
+                    console.debug('Start of Frame (baseline): ' + i);
                     image.height = dataView.getUint16(i + 5);
                     image.width = dataView.getUint16(i + 7);
-                    console.log('--- Width: ' + image.width + ', Height: ' + image.height);
+                    console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
                 } else if (nextByte == 0xC2) {
 
                     // SOF marker
-                    console.log('Start of Frame (progressive): ' + i);
+                    console.debug('Start of Frame (progressive): ' + i);
                     image.height = dataView.getUint16(i + 5);
                     image.width = dataView.getUint16(i + 7);
-                    console.log('--- Width: ' + image.width + ', Height: ' + image.height);
+                    console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
                 } else if (nextByte == 0xC4) {
 
                     // Huffman Table marker
-                    console.log('Huffman Tables: ' + i);
+                    console.debug('Huffman Tables: ' + i);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
                 } else if (nextByte == 0xDB) {
 
                     // Quantization Table marker
-                    console.log('Quantization Tables: ' + i);
+                    console.debug('Quantization Tables: ' + i);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
                 } else if (nextByte == 0xDD) {
 
                     // Restart Interval marker:
-                    console.log('Restart Interval: ' + i);
+                    console.debug('Restart Interval: ' + i);
                     i += 4;
 
                 } else if (nextByte >= 0xD0 && nextByte <= 0xD7) {
 
                     // Restart marker:
-                    console.log('Restart (' + (nextByte - 0xD0) + '): ' + i);
+                    console.debug('Restart (' + (nextByte - 0xD0) + '): ' + i);
 
                 } else if (nextByte == 0xDA) {
 
                     // SOS marker:
-                    console.log('Start of Scan: ' + i);
+                    console.debug('Start of Scan: ' + i);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
                 } else if (nextByte >= 0xE0 && nextByte <= 0xE9) {
 
                     // APP# marker:
-                    console.log('APP' + (nextByte - 0xE0) + ': ' + i);
+                    console.debug('APP' + (nextByte - 0xE0) + ': ' + i);
                     const length = dataView.getUint16(i + 2);
                     if (nextByte == 0xE1) {
                         // Parse thumbnail:
@@ -95,7 +95,7 @@ class MpoSplitter {
                 } else if (nextByte == 0xFE) {
 
                     // Comment marker:
-                    console.log('Comment: ' + i);
+                    console.debug('Comment: ' + i);
                     const length = dataView.getUint16(i + 2);
                     i += length;
 
