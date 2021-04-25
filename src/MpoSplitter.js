@@ -3,6 +3,7 @@ class MpoSplitter {
     split(arrayBuffer, byteOffset = 0, length = arrayBuffer.length) {
 
         let image;
+        let insideImage = false;
         const images = [];
         const dataView = new DataView(arrayBuffer, byteOffset, length);
 
@@ -18,87 +19,92 @@ class MpoSplitter {
                     // SOI marker
                     console.debug('--- Start of Image: ' + i);
                     image = { buffer: arrayBuffer, startPosition: i + byteOffset };
+                    insideImage = true;
 
-                } else if (nextByte == 0xD9) {
+                } else if(insideImage) {
 
-                    // EOI marker
-                    console.debug('--- End of Image: ' + i);
-                    image.length = i + 2 - image.startPosition + byteOffset;
-                    images.push(image);
+                    if (nextByte == 0xD9) {
 
-                } else if (nextByte == 0xC0) {
+                        // EOI marker
+                        console.debug('--- End of Image: ' + i);
+                        image.length = i + 2 - image.startPosition + byteOffset;
+                        images.push(image);
+                        insideImage = false;
 
-                    // SOF marker
-                    console.debug('Start of Frame (baseline): ' + i);
-                    image.height = dataView.getUint16(i + 5);
-                    image.width = dataView.getUint16(i + 7);
-                    console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
+                    } else if (nextByte == 0xC0) {
 
-                } else if (nextByte == 0xC2) {
+                        // SOF marker
+                        console.debug('Start of Frame (baseline): ' + i);
+                        image.height = dataView.getUint16(i + 5);
+                        image.width = dataView.getUint16(i + 7);
+                        console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
 
-                    // SOF marker
-                    console.debug('Start of Frame (progressive): ' + i);
-                    image.height = dataView.getUint16(i + 5);
-                    image.width = dataView.getUint16(i + 7);
-                    console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
+                    } else if (nextByte == 0xC2) {
 
-                } else if (nextByte == 0xC4) {
+                        // SOF marker
+                        console.debug('Start of Frame (progressive): ' + i);
+                        image.height = dataView.getUint16(i + 5);
+                        image.width = dataView.getUint16(i + 7);
+                        console.debug('--- Width: ' + image.width + ', Height: ' + image.height);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
 
-                    // Huffman Table marker
-                    console.debug('Huffman Tables: ' + i);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
+                    } else if (nextByte == 0xC4) {
 
-                } else if (nextByte == 0xDB) {
+                        // Huffman Table marker
+                        console.debug('Huffman Tables: ' + i);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
 
-                    // Quantization Table marker
-                    console.debug('Quantization Tables: ' + i);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
+                    } else if (nextByte == 0xDB) {
 
-                } else if (nextByte == 0xDD) {
+                        // Quantization Table marker
+                        console.debug('Quantization Tables: ' + i);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
 
-                    // Restart Interval marker:
-                    console.debug('Restart Interval: ' + i);
-                    i += 4;
+                    } else if (nextByte == 0xDD) {
 
-                } else if (nextByte >= 0xD0 && nextByte <= 0xD7) {
+                        // Restart Interval marker:
+                        console.debug('Restart Interval: ' + i);
+                        i += 4;
 
-                    // Restart marker:
-                    console.debug('Restart (' + (nextByte - 0xD0) + '): ' + i);
+                    } else if (nextByte >= 0xD0 && nextByte <= 0xD7) {
 
-                } else if (nextByte == 0xDA) {
+                        // Restart marker:
+                        console.debug('Restart (' + (nextByte - 0xD0) + '): ' + i);
 
-                    // SOS marker:
-                    console.debug('Start of Scan: ' + i);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
+                    } else if (nextByte == 0xDA) {
 
-                } else if (nextByte >= 0xE0 && nextByte <= 0xE9) {
+                        // SOS marker:
+                        console.debug('Start of Scan: ' + i);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
 
-                    // APP# marker:
-                    console.debug('APP' + (nextByte - 0xE0) + ': ' + i);
-                    const length = dataView.getUint16(i + 2);
-                    if (nextByte == 0xE1) {
-                        // Parse thumbnail:
-                        const thumbnails = this.split(arrayBuffer, byteOffset + i + 2, length);
-                        if (thumbnails.length > 0) {
-                            image.thumbnail = thumbnails[0];
+                    } else if (nextByte >= 0xE0 && nextByte <= 0xE9) {
+
+                        // APP# marker:
+                        console.debug('APP' + (nextByte - 0xE0) + ': ' + i);
+                        const length = dataView.getUint16(i + 2);
+                        if (nextByte == 0xE1) {
+                            // Parse thumbnail:
+                            const thumbnails = this.split(arrayBuffer, byteOffset + i + 2, length);
+                            if (thumbnails.length > 0) {
+                                image.thumbnail = thumbnails[0];
+                            }
                         }
+                        i += length;
+
+                    } else if (nextByte == 0xFE) {
+
+                        // Comment marker:
+                        console.debug('Comment: ' + i);
+                        const length = dataView.getUint16(i + 2);
+                        i += length;
+
                     }
-                    i += length;
-
-                } else if (nextByte == 0xFE) {
-
-                    // Comment marker:
-                    console.debug('Comment: ' + i);
-                    const length = dataView.getUint16(i + 2);
-                    i += length;
-
                 }
             }
         }
