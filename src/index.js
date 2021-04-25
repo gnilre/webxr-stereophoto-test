@@ -7,10 +7,30 @@ const texturePath = 'textures/';
 
 const stereoPhotos = [
 
+    { imageFile: 'P1000047.MPO', xOffset: 80, yOffset: 13 },
+    { imageFile: 'P1000051.MPO', xOffset: 90, yOffset: 13 },
     { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
-    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
-    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
-    { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
+    { imageFile: 'P1000063.MPO', xOffset: 0, yOffset: 13 },
+
+    { imageFile: 'P1000064.MPO', xOffset: 0, yOffset: 13 },
+    { imageFile: 'P1000067.MPO', xOffset: 70, yOffset: 13 },
+    { imageFile: 'P1000073.MPO', xOffset: 8, yOffset: 13 },
+    { imageFile: 'P1000079.MPO', xOffset: -3, yOffset: 13 },
+
+    { imageFile: 'P1000097.MPO', xOffset: 45, yOffset: 15 },
+    { imageFile: 'P1000098.MPO', xOffset: 45, yOffset: 15 },
+    { imageFile: 'P1000103.MPO', xOffset: 65, yOffset: 13 },
+    { imageFile: 'P1000108.MPO', xOffset: 40, yOffset: 13 },
+
+    { imageFile: 'P1000111.MPO', xOffset: 85, yOffset: 13 },
+    { imageFile: 'P1000121.MPO', xOffset: 40, yOffset: 16 },
+    { imageFile: 'P1000130.MPO', xOffset: 20, yOffset: 15 },
+    { imageFile: 'P1000141.MPO', xOffset: 0, yOffset: 14 },
+
+    { imageFile: 'P1000167.MPO', xOffset: 30, yOffset: 0 },
+    { imageFile: 'P1000170.MPO', xOffset: 10, yOffset: 0 },
+    { imageFile: 'P1000172.MPO', xOffset: 45, yOffset: 0 },
+    { imageFile: 'P1000257.MPO', xOffset: 0, yOffset: 0 },
 
     { leftImageFile: 'P1030842_l.JPG', rightImageFile: 'P1030842_r.JPG', scale: 0.8 },
     { leftImageFile: 'P1030485_l.JPG', rightImageFile: 'P1030485_r.JPG' },
