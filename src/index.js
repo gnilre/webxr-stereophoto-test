@@ -496,6 +496,7 @@ function createRenderer() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.xr.enabled = true;
+    renderer.xr.setFramebufferScaleFactor(2.0);
 
     const width = window.innerWidth;
     const height = window.innerHeight;
