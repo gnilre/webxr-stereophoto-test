@@ -38,7 +38,7 @@ class MpoImageLoader {
         const offset = image.startPosition;
         const length = image.length;
         const blob = new Blob([new Uint8Array(buffer, offset, length)], { type: "image/jpeg" });
-        return createImageBitmap(blob, sx, sy, sw, sh, { imageOrientation: 'flipY' });
+        return createImageBitmap(blob, sx, sy, sw, sh);
     }
 
 }

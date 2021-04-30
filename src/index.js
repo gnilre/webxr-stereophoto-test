@@ -296,17 +296,47 @@ function hideImageFromFrame(imageFrame) {
     imageFrame.material.needsUpdate = true;
 }
 
-function showImageInFrame(photoFrame, imageFrame, texture, scale = 1.0) {
+async function showImageInFrame(photoFrame, imageFrame, texture, scale = 1.0) {
+
+    // Get image dimensions:
+    const imageWidth = texture.image.width;
+    const imageHeight = texture.image.height;
+
+    // Pad texture to power of two size to enable mipmapping:
+    padToPowerOfTwo(texture);
+
+    // Create mipmaps:
+    const mipmaps = await createMipmaps(texture.image);
+    texture.mipmaps = mipmaps;
+    texture.anisotropy = 16;
+    texture.needsUpdate = true;
 
     // Update texture:
     imageFrame.material.map = texture;
     imageFrame.material.color.setHex(0xffffff);
     imageFrame.material.needsUpdate = true;
 
+    // Replace geometry:
+    imageFrame.geometry = new THREE.PlaneBufferGeometry(1, 1);
+
     // Update frame size according to the aspect ratio of the photo:
-    const aspectRatio = texture.image.width / texture.image.height;
+    const aspectRatio = imageWidth / imageHeight;
     imageFrame.scale.x = photoFrame.width * scale;
     imageFrame.scale.y = imageFrame.scale.x / aspectRatio;
+
+    // Scale texture coordinates:
+    const maxU = imageWidth / texture.image.width;
+    const maxV = imageHeight / texture.image.height;
+    const uv = imageFrame.geometry.attributes.uv;
+    for(let i=0; i < uv.count; i++) {
+        if(uv.getX(i) > 0) {
+            uv.setX(i, maxU);
+        }
+        if(uv.getY(i) == 0) {
+            uv.setY(i, 1 - maxV)
+        }
+    }
+    uv.needsUpdate = true;
 
     // Adjust photo frame vertical position:
     const frameHeight = imageFrame.scale.y;
@@ -416,6 +446,40 @@ async function loadTexture(path, onComplete) {
             resolve(texture);
         });
     });
+}
+
+function padToPowerOfTwo(texture) {
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 4096;
+    const context = canvas.getContext("2d");
+    context.drawImage(texture.image, 0, 0);
+    texture.image = canvas;
+    texture.needsUpdate = true;
+
+}
+
+async function createMipmaps(image) {
+    const mipMaps = [image];
+    let size = image.width / 2;
+    let source = image;
+    while(size >= 1) {
+        const mipmap = await createMipmap(source, size);
+        mipMaps.push(mipmap);
+        source = mipmap;
+        size /= 2;
+    }
+    return mipMaps;
+}
+
+async function createMipmap(sourceImage, size) {
+    const options = { resizeWidth: size, resizeHeight: size, resizeQuality: 'high', };
+    const bitmap = await createImageBitmap(sourceImage, 0, 0, sourceImage.width, sourceImage.height, options);
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = size;
+    const context = canvas.getContext("2d");
+    context.drawImage(bitmap, 0, 0);
+    return canvas;
 }
 
 function createCamera() {
