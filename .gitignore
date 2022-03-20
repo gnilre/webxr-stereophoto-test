@@ -1,5 +1,6 @@
 .idea/
-src/textures/sbs/*.*
-src/textures/sbs/alignment/*.*
-src/textures/split/*.*
+node_modules/**/*
+src/textures/sbs/*
+src/textures/sbs/alignment/*
+src/textures/split/*
 **/*.webp
