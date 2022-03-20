@@ -7,6 +7,21 @@ const texturePath = 'textures/';
 
 const stereoPhotos = [
 
+    { leftImageFile: 'IMG_0422_l.JPG', rightImageFile: 'IMG_0422_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0424_l.JPG', rightImageFile: 'IMG_0424_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0426_l.JPG', rightImageFile: 'IMG_0426_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0427_l.JPG', rightImageFile: 'IMG_0427_r.JPG', scale: 0.5 },
+
+    { leftImageFile: 'IMG_0429_l.JPG', rightImageFile: 'IMG_0429_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0439_l.JPG', rightImageFile: 'IMG_0439_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0440_l.JPG', rightImageFile: 'IMG_0440_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0442_l.JPG', rightImageFile: 'IMG_0442_r.JPG', scale: 0.5 },
+
+    { leftImageFile: 'IMG_0432_l.JPG', rightImageFile: 'IMG_0432_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0434_l.JPG', rightImageFile: 'IMG_0434_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0435_l.JPG', rightImageFile: 'IMG_0435_r.JPG', scale: 0.5 },
+    { leftImageFile: 'IMG_0468_l.JPG', rightImageFile: 'IMG_0468_r.JPG', scale: 0.5 },
+
     { imageFile: 'P1000047.MPO', xOffset: 80, yOffset: 13 },
     { imageFile: 'P1000051.MPO', xOffset: 90, yOffset: 13 },
     { imageFile: 'P1000057.MPO', xOffset: 58, yOffset: 11 },
@@ -66,6 +81,17 @@ const stereoPhotos = [
     { leftImageFile: 'DSCF4041_l.PNG', rightImageFile: 'DSCF4041_r.PNG' },
     { leftImageFile: 'DSCF4044_l.PNG', rightImageFile: 'DSCF4044_r.PNG' },
     { leftImageFile: 'DSCF4045_l.PNG', rightImageFile: 'DSCF4045_r.PNG' },
+
+    { imageFile: 'P1030858.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030860.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030862.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030864.MPO', xOffset: 0, yOffset: 0 },
+
+    { imageFile: 'P1030865.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030867.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030871.MPO', xOffset: 0, yOffset: 0 },
+    { imageFile: 'P1030874.MPO', xOffset: 0, yOffset: 0 },
+
 ];
 
 main();
