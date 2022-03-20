@@ -1,4 +1,5 @@
 .idea/
-**/*.png
-**/*.jpg
+src/textures/sbs/*.*
+src/textures/sbs/alignment/*.*
+src/textures/split/*.*
 **/*.webp
