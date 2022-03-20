@@ -113,7 +113,16 @@ function main() {
     addRoom(scene, roomSize);
     addLights(scene, roomSize);
 
-    let photoStartIndex = 0;
+    let photoStartIndex = parseInt(getUrlParam('photoStartIndex'));
+    if (isNaN(photoStartIndex)) {
+        photoStartIndex = 0;
+        setUrlParam('photoStartIndex', photoStartIndex);
+    }
+    if (photoStartIndex + 4 > stereoPhotos.length) {
+        photoStartIndex = stereoPhotos.length - 4;
+        setUrlParam('photoStartIndex', photoStartIndex);
+    }
+
     const photoFrames = addPhotoFrames(scene, roomSize);
     loadStereoPhotos(photoFrames, photoStartIndex);
 
@@ -174,6 +183,12 @@ function main() {
         }
     });
 
+    document.addEventListener('keydown', event => {
+        if (event.code === 'Enter') {
+            onSelectEnd();
+        }
+    });
+
     window.addEventListener('resize', () => {
         if (!renderer.xr.isPresenting) {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -189,8 +204,20 @@ function main() {
     function onSelectEnd() {
         photoStartIndex = (photoStartIndex + 4) % stereoPhotos.length;
         loadStereoPhotos(photoFrames, photoStartIndex);
+        setUrlParam('photoStartIndex', photoStartIndex);
     }
 
+}
+
+function getUrlParam(param) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(param);
+}
+
+function setUrlParam(param, value) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(param, value);
+    window.history.replaceState(null, '', url);
 }
 
 async function addRoom(scene, roomSize) {
